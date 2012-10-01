@@ -33,7 +33,7 @@
     <security:authentication-manager>
         <security:authentication-provider>
             <security:password-encoder hash="sha-256">
-                <security:salt-source user-property="${SALT:secret}"/>
+                <security:salt-source system-wide="${SALT:secret}"/>
             </security:password-encoder>
             <security:user-service>
                 <security:user name="daspilker"
