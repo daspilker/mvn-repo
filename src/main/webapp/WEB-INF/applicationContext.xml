@@ -31,15 +31,10 @@
         <security:logout/>
     </security:http>
     <security:authentication-manager>
-        <security:authentication-provider>
+        <security:authentication-provider user-service-ref="mongoDbUserDetailsService">
             <security:password-encoder hash="sha-256">
-                <security:salt-source system-wide="${SALT:secret}"/>
+                <security:salt-source user-property="salt"/>
             </security:password-encoder>
-            <security:user-service>
-                <security:user name="daspilker"
-                               password="d4bfcf960f90b1935ef03a3fd834dba9652cd88c07326cdf0c4288adc28cd8e5"
-                               authorities="ROLE_USER"/>
-            </security:user-service>
         </security:authentication-provider>
     </security:authentication-manager>
 </beans>

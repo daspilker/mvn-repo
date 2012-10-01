@@ -1,0 +1,75 @@
+package com.daspilker.mvnrepo;
+
+import com.mongodb.BasicDBList;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import java.util.Collection;
+import java.util.LinkedList;
+
+import static com.mongodb.BasicDBObjectBuilder.start;
+
+@Component
+public class MongoDbUserDetailsService implements UserDetailsService {
+    private static final String FIELD_USERNAME = "username";
+    private static final String FIELD_PASSWORD = "password";
+    private static final String FIELD_AUTHORITIES = "authorities";
+    private static final String FIELD_SALT = "salt";
+
+    @Inject
+    private DB db;
+
+    @PostConstruct
+    public void initialize() {
+        getCollection().ensureIndex(start().add(FIELD_USERNAME, 1).get());
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        DBObject user = getCollection().findOne(start().add(FIELD_USERNAME, username).get());
+        if (user == null) {
+            throw new UsernameNotFoundException(username);
+        }
+        String password = (String) user.get(FIELD_PASSWORD);
+        Collection<GrantedAuthority> authorities = convertAuthorities((BasicDBList) user.get(FIELD_AUTHORITIES));
+        String salt = (String) user.get(FIELD_SALT);
+        return new SaltedUser(username, password, authorities, salt);
+    }
+
+    private DBCollection getCollection() {
+        return db.getCollection("users");
+    }
+
+    private static Collection<GrantedAuthority> convertAuthorities(BasicDBList authorities) {
+        Collection<GrantedAuthority> result = new LinkedList<>();
+        if (authorities != null) {
+            for (Object authority : authorities) {
+                result.add(new SimpleGrantedAuthority((String) authority));
+            }
+        }
+        return result;
+    }
+
+    public static final class SaltedUser extends User {
+        private String salt;
+
+        public SaltedUser(String username, String password, Collection<GrantedAuthority> authorities, String salt) {
+            super(username, password, authorities);
+            this.salt = salt;
+        }
+
+        public String getSalt() {
+            return salt;
+        }
+    }
+}

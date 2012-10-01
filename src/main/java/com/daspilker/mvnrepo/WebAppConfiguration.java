@@ -34,12 +34,17 @@ public class WebAppConfiguration extends WebMvcConfigurerAdapter {
     private String mongoUri;
 
     @Bean
-    public GridFS gridFS() throws UnknownHostException {
+    public DB db() throws UnknownHostException {
         MongoURI mongoURI = new MongoURI(mongoUri);
         DB db = mongoURI.connectDB();
         if (mongoURI.getUsername() != null && mongoURI.getPassword() != null) {
             db.authenticate(mongoURI.getUsername(), mongoURI.getPassword());
         }
-        return new GridFS(db);
+        return db;
+    }
+
+    @Bean
+    public GridFS gridFS() throws UnknownHostException {
+        return new GridFS(db());
     }
 }
