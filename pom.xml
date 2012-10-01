@@ -16,6 +16,11 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.daspilker</groupId>
+        <artifactId>parent</artifactId>
+        <version>1</version>
+    </parent>
     <groupId>com.daspilker.mvn-repo</groupId>
     <artifactId>mvn-repo</artifactId>
     <version>1-SNAPSHOT</version>
@@ -23,8 +28,6 @@
     <name>mvn-repo</name>
     <description>Maven Repository</description>
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <version.org.springframework>3.1.2.RELEASE</version.org.springframework>
         <version.org.springframework.security>3.1.2.RELEASE</version.org.springframework.security>
     </properties>
@@ -127,31 +130,18 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
+    <repositories>
+        <repository>
+            <id>daspilker</id>
+            <url>http://maven.daniel-spilker.com/repository/</url>
+        </repository>
+    </repositories>
     <build>
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>com.google.code.sortpom</groupId>
-                    <artifactId>maven-sortpom-plugin</artifactId>
-                    <version>2.0.0</version>
-                    <configuration>
-                        <createBackupFile>false</createBackupFile>
-                        <nrOfIndentSpace>4</nrOfIndentSpace>
-                        <sortDependencies>true</sortDependencies>
-                        <sortPlugins>true</sortPlugins>
-                        <sortProperties>true</sortProperties>
-                        <predefinedSortOrder>recommended_2008_06</predefinedSortOrder>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>2.5</version>
-                </plugin>
-                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.5.1</version>
                     <configuration>
                         <source>1.7</source>
                         <target>1.7</target>
@@ -160,25 +150,9 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-install-plugin</artifactId>
-                    <version>2.4</version>
                     <configuration>
                         <skip>true</skip>
                     </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.6</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.12.4</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-war-plugin</artifactId>
-                    <version>2.3</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -186,7 +160,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.5.1</version>
                 <executions>
                     <execution>
                         <id>analyze-dependencies</id>
@@ -203,7 +176,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.1.1</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.codehaus.mojo</groupId>
@@ -231,7 +203,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.12.4</version>
                 <executions>
                     <execution>
                         <goals>
