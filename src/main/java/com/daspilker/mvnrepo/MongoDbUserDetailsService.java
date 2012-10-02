@@ -58,7 +58,7 @@ public class MongoDbUserDetailsService implements UserDetailsService {
         }
         String password = (String) user.get(FIELD_PASSWORD);
         Collection<GrantedAuthority> authorities = convertAuthorities((BasicDBList) user.get(FIELD_AUTHORITIES));
-        String salt = (String) user.get(FIELD_SALT);
+        Object salt = user.get(FIELD_SALT);
         return new SaltedUser(username, password, authorities, salt);
     }
 
@@ -77,14 +77,14 @@ public class MongoDbUserDetailsService implements UserDetailsService {
     }
 
     public static final class SaltedUser extends User {
-        private String salt;
+        private Object salt;
 
-        public SaltedUser(String username, String password, Collection<GrantedAuthority> authorities, String salt) {
+        public SaltedUser(String username, String password, Collection<GrantedAuthority> authorities, Object salt) {
             super(username, password, authorities);
             this.salt = salt;
         }
 
-        public String getSalt() {
+        public Object getSalt() {
             return salt;
         }
     }
