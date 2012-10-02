@@ -31,8 +31,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
+import static com.google.common.io.ByteStreams.copy;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
-import static org.apache.commons.io.IOUtils.copy;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 import static org.springframework.web.servlet.HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE;

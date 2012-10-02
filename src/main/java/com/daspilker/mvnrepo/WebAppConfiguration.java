@@ -16,6 +16,7 @@
 
 package com.daspilker.mvnrepo;
 
+import com.google.common.io.Resources;
 import com.mongodb.DB;
 import com.mongodb.MongoURI;
 import com.mongodb.gridfs.GridFS;
@@ -25,26 +26,38 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import java.net.UnknownHostException;
+import java.io.IOException;
+
+import static com.google.common.base.Charsets.UTF_8;
+import static com.google.common.io.Resources.getResource;
+import static com.mongodb.BasicDBObjectBuilder.start;
 
 @EnableWebMvc
 @Configuration
 public class WebAppConfiguration extends WebMvcConfigurerAdapter {
+    private static final String FUNCTIONS_PACKAGE = "com/daspilker/mvnrepo/functions/";
+
     @Value("${MONGOLAB_URI:mongodb://localhost:27017/mvnrepo}")
     private String mongoUri;
 
     @Bean
-    public DB db() throws UnknownHostException {
+    public DB db() throws IOException {
         MongoURI mongoURI = new MongoURI(mongoUri);
         DB db = mongoURI.connectDB();
         if (mongoURI.getUsername() != null && mongoURI.getPassword() != null) {
             db.authenticate(mongoURI.getUsername(), mongoURI.getPassword());
         }
+
+        String sha256Function = Resources.toString(getResource(FUNCTIONS_PACKAGE + "sha256.js"), UTF_8);
+        db.getCollection("system.js").save(start().add("_id", "sha256").add("value", sha256Function).get());
+        String createUserFunction = Resources.toString(getResource(FUNCTIONS_PACKAGE + "createUser.js"), UTF_8);
+        db.getCollection("system.js").save(start().add("_id", "createUser").add("value", createUserFunction).get());
+
         return db;
     }
 
     @Bean
-    public GridFS gridFS() throws UnknownHostException {
+    public GridFS gridFS() throws IOException {
         return new GridFS(db());
     }
 }

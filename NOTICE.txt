@@ -1,2 +1,5 @@
 mvn-repo
 Copyright 2012 Daniel A. Spilker
+
+sha256.js provided by webtoolkit.info:
+http://www.webtoolkit.info/javascript-sha256.html
