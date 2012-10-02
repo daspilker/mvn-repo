@@ -19,7 +19,6 @@ package com.daspilker.mvnrepo;
 import com.google.common.io.Resources;
 import com.mongodb.DB;
 import com.mongodb.MongoURI;
-import com.mongodb.gridfs.GridFS;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -54,10 +53,5 @@ public class WebAppConfiguration extends WebMvcConfigurerAdapter {
         db.getCollection("system.js").save(start().add("_id", "createUser").add("value", createUserFunction).get());
 
         return db;
-    }
-
-    @Bean
-    public GridFS gridFS() throws IOException {
-        return new GridFS(db());
     }
 }
