@@ -19,6 +19,7 @@ package com.daspilker.mvnrepo;
 import com.google.common.io.Resources;
 import com.mongodb.DB;
 import com.mongodb.MongoURI;
+import com.mongodb.gridfs.GridFS;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,12 +47,26 @@ public class WebAppConfiguration extends WebMvcConfigurerAdapter {
         if (mongoURI.getUsername() != null && mongoURI.getPassword() != null) {
             db.authenticate(mongoURI.getUsername(), mongoURI.getPassword());
         }
-
-        String sha256Function = Resources.toString(getResource(FUNCTIONS_PACKAGE + "sha256.js"), UTF_8);
-        db.getCollection("system.js").save(start().add("_id", "sha256").add("value", sha256Function).get());
-        String createUserFunction = Resources.toString(getResource(FUNCTIONS_PACKAGE + "createUser.js"), UTF_8);
-        db.getCollection("system.js").save(start().add("_id", "createUser").add("value", createUserFunction).get());
-
+        loadFunction(db, "sha256");
+        loadFunction(db, "createUser");
         return db;
+    }
+
+    @Bean
+    public GridFS releaseGridFS() throws IOException {
+        return new GridFS(db(), "releases");
+    }
+
+    @Bean
+    public GridFS snapshotGridFS() throws IOException {
+        return new GridFS(db(), "snapshots");
+    }
+
+    static String loadFunction(String name) throws IOException {
+        return Resources.toString(getResource(FUNCTIONS_PACKAGE + name + ".js"), UTF_8);
+    }
+
+    private static void loadFunction(DB db, String name) throws IOException {
+        db.getCollection("system.js").save(start().add("_id", name).add("value", loadFunction(name)).get());
     }
 }
