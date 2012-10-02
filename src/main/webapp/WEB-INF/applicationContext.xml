@@ -37,4 +37,11 @@
             </security:password-encoder>
         </security:authentication-provider>
     </security:authentication-manager>
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.mustache.MustacheViewResolver">
+        <property name="prefix" value="/WEB_INF/templates/"/>
+        <property name="suffix" value=".html"/>
+        <property name="templateLoader">
+            <bean class="org.springframework.web.servlet.view.mustache.MustacheTemplateLoader"/>
+        </property>
+    </bean>
 </beans>
