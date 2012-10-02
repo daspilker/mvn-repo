@@ -32,7 +32,9 @@ import java.io.OutputStream;
 import java.util.List;
 
 import static com.google.common.io.ByteStreams.copy;
+import static javax.servlet.http.HttpServletResponse.SC_CREATED;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
+import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 import static org.springframework.web.servlet.HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE;
@@ -67,6 +69,11 @@ public class RepositoryController {
         }
         for (GridFSDBFile oldFile : oldFiles) {
             gridFS.remove(oldFile);
+        }
+        if (oldFiles.isEmpty()) {
+            response.setStatus(SC_CREATED);
+        } else {
+            response.setStatus(SC_NO_CONTENT);
         }
     }
 
