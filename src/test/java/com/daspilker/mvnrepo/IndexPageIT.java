@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import static org.junit.Assert.assertEquals;
@@ -19,13 +18,7 @@ public class IndexPageIT {
 
     @Before
     public void setUp() {
-        FirefoxBinary firefoxBinary = new FirefoxBinary();
-        String display = System.getenv("DISPLAY");
-        System.out.println("DISPLAY=" + display);
-        if (display != null) {
-            firefoxBinary.setEnvironmentProperty("DISPLAY", display);
-        }
-        driver = new FirefoxDriver(firefoxBinary, null);
+        driver = new FirefoxDriver();
     }
 
     @After
