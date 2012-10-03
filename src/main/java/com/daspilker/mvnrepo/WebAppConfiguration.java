@@ -23,7 +23,6 @@ import com.mongodb.gridfs.GridFS;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.io.IOException;
@@ -32,7 +31,6 @@ import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.io.Resources.getResource;
 import static com.mongodb.BasicDBObjectBuilder.start;
 
-@EnableWebMvc
 @Configuration
 public class WebAppConfiguration extends WebMvcConfigurerAdapter {
     private static final String FUNCTIONS_PACKAGE = "com/daspilker/mvnrepo/functions/";
