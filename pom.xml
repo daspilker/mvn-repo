@@ -35,6 +35,7 @@
         <version.org.slf4j>1.7.1</version.org.slf4j>
         <version.org.springframework>3.1.2.RELEASE</version.org.springframework>
         <version.org.springframework.security>3.1.2.RELEASE</version.org.springframework.security>
+        <skipTests>false</skipTests>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -312,6 +313,7 @@
                             <systemProperties>
                                 <MONGOLAB_URI>mongodb://localhost/mvnrepo-test</MONGOLAB_URI>
                             </systemProperties>
+                            <skip>${skipTests}</skip>
                         </configuration>
                     </execution>
                     <execution>
@@ -320,6 +322,9 @@
                             <goal>shutdown</goal>
                         </goals>
                         <phase>post-integration-test</phase>
+                        <configuration>
+                            <skip>${skipTests}</skip>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
