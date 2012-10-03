@@ -18,6 +18,7 @@ package com.daspilker.mvnrepo;
 
 import com.google.common.io.Resources;
 import com.mongodb.DB;
+import com.mongodb.Mongo;
 import com.mongodb.MongoURI;
 import com.mongodb.gridfs.GridFS;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +26,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import javax.annotation.PreDestroy;
 import java.io.IOException;
 
 import static com.google.common.base.Charsets.UTF_8;
@@ -34,6 +36,8 @@ import static com.mongodb.BasicDBObjectBuilder.start;
 @Configuration
 public class WebAppConfiguration extends WebMvcConfigurerAdapter {
     private static final String FUNCTIONS_PACKAGE = "com/daspilker/mvnrepo/functions/";
+
+    private Mongo mongo;
 
     @Value("${MONGOLAB_URI:mongodb://localhost:27017/mvnrepo}")
     private String mongoUri;
@@ -45,6 +49,7 @@ public class WebAppConfiguration extends WebMvcConfigurerAdapter {
         if (mongoURI.getUsername() != null && mongoURI.getPassword() != null) {
             db.authenticate(mongoURI.getUsername(), mongoURI.getPassword());
         }
+        mongo = db.getMongo();
         loadFunction(db, "sha256");
         loadFunction(db, "createUser");
         return db;
@@ -58,6 +63,11 @@ public class WebAppConfiguration extends WebMvcConfigurerAdapter {
     @Bean
     public GridFS snapshotGridFS() throws IOException {
         return new GridFS(db(), "snapshots");
+    }
+
+    @PreDestroy
+    public void destroy() throws IOException {
+        mongo.close();
     }
 
     static String loadFunction(String name) throws IOException {
