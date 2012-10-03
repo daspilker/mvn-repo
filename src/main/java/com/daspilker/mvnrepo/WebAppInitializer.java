@@ -36,8 +36,10 @@ public class WebAppInitializer implements WebApplicationInitializer {
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
+        String profile = System.getenv("ENVIRONMENT");
+
         XmlWebApplicationContext applicationContext = new XmlWebApplicationContext();
-        applicationContext.getEnvironment().setActiveProfiles(System.getProperty("ENVIRONMENT", "development"));
+        applicationContext.getEnvironment().setActiveProfiles(profile != null ? profile : "development");
 
         servletContext.addListener(new ContextLoaderListener(applicationContext));
 
