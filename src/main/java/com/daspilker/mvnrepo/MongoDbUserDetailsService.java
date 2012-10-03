@@ -16,10 +16,10 @@
 
 package com.daspilker.mvnrepo;
 
-import com.mongodb.BasicDBList;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import org.bson.types.BasicBSONList;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -51,13 +51,13 @@ public class MongoDbUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         DBObject user = getCollection().findOne(start().add(FIELD_USERNAME, username).get());
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
         String password = (String) user.get(FIELD_PASSWORD);
-        Collection<GrantedAuthority> authorities = convertAuthorities((BasicDBList) user.get(FIELD_AUTHORITIES));
+        Collection<GrantedAuthority> authorities = convertAuthorities((BasicBSONList) user.get(FIELD_AUTHORITIES));
         Object salt = user.get(FIELD_SALT);
         return new SaltedUser(username, password, authorities, salt);
     }
@@ -66,7 +66,7 @@ public class MongoDbUserDetailsService implements UserDetailsService {
         return db.getCollection("users");
     }
 
-    private static Collection<GrantedAuthority> convertAuthorities(BasicDBList authorities) {
+    private static Collection<GrantedAuthority> convertAuthorities(BasicBSONList authorities) {
         Collection<GrantedAuthority> result = new LinkedList<>();
         if (authorities != null) {
             for (Object authority : authorities) {
@@ -77,6 +77,8 @@ public class MongoDbUserDetailsService implements UserDetailsService {
     }
 
     public static final class SaltedUser extends User {
+        private static final long serialVersionUID = -5440899816444344051L;
+
         private Object salt;
 
         public SaltedUser(String username, String password, Collection<GrantedAuthority> authorities, Object salt) {

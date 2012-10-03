@@ -22,14 +22,18 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 
-import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 import java.util.EnumSet;
 
+import static javax.servlet.DispatcherType.REQUEST;
+import static org.springframework.security.config.BeanIds.SPRING_SECURITY_FILTER_CHAIN;
+
 public class WebAppInitializer implements WebApplicationInitializer {
+    private static final String SERVLET_NAME_DISPATCHER = "dispatcher";
+
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         XmlWebApplicationContext applicationContext = new XmlWebApplicationContext();
@@ -38,12 +42,12 @@ public class WebAppInitializer implements WebApplicationInitializer {
         servletContext.addListener(new ContextLoaderListener(applicationContext));
 
         DispatcherServlet dispatcherServlet = new DispatcherServlet(applicationContext);
-        ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher", dispatcherServlet);
+        ServletRegistration.Dynamic dispatcher = servletContext.addServlet(SERVLET_NAME_DISPATCHER, dispatcherServlet);
         dispatcher.setLoadOnStartup(1);
         dispatcher.addMapping("/*");
 
-        DelegatingFilterProxy springSecurityFilterChain = new DelegatingFilterProxy("springSecurityFilterChain", applicationContext);
-        FilterRegistration.Dynamic springSecurityFilter = servletContext.addFilter("springSecurityFilterChain", springSecurityFilterChain);
-        springSecurityFilter.addMappingForServletNames(EnumSet.of(DispatcherType.REQUEST), false, "dispatcher");
+        DelegatingFilterProxy springSecurityFilterChain = new DelegatingFilterProxy(SPRING_SECURITY_FILTER_CHAIN, applicationContext);
+        FilterRegistration.Dynamic springSecurityFilter = servletContext.addFilter(SPRING_SECURITY_FILTER_CHAIN, springSecurityFilterChain);
+        springSecurityFilter.addMappingForServletNames(EnumSet.of(REQUEST), false, SERVLET_NAME_DISPATCHER);
     }
 }

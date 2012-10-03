@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static org.springframework.web.servlet.HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE;
 
-public class AbstractController {
+public abstract class AbstractController {
     private static final PathMatcher PATH_MATCHER = new AntPathMatcher();
 
     @Inject
