@@ -17,7 +17,13 @@
 <meta charset=utf-8>
 <title>Maven Repository Browser</title>
 <h1>Maven Repository Browser</h1>
+<h2>{{ repository }} Repository</h2>
+<h3>/{{ path }}</h3>
 <ul>
-    <li><a href="browser/releases/">Browse Release Repository</a>
-    <li><a href="browser/snapshots/">Browse Snapshot Repository</a>
+{{#directories}}
+    <li><a href="{{ _id }}/">{{ _id }}/</a>
+{{/directories}}
+{{#files}}
+    <li>{{ _id }}
+{{/files}}
 </ul>

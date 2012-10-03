@@ -18,7 +18,6 @@ package com.daspilker.mvnrepo;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MapReduceCommand;
@@ -37,13 +36,15 @@ import java.util.Map;
 
 import static com.daspilker.mvnrepo.WebAppConfiguration.loadFunction;
 import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.isEmpty;
 import static com.mongodb.BasicDBObjectBuilder.start;
 import static java.util.regex.Pattern.compile;
+import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
 @RequestMapping(value = "/browser/{repository:releases|snapshots}/**")
-public class BrowserController extends AbstractController {
+public class DirectoryController extends AbstractController {
     private static final Predicate<DBObject> FILE_PREDICATE = new FilePredicate(false);
     private static final Predicate<DBObject> DIRECTORY_PREDICATE = new FilePredicate(true);
 
@@ -57,30 +58,31 @@ public class BrowserController extends AbstractController {
     }
 
     @RequestMapping(method = GET)
-    public ModelAndView index(@PathVariable String repository,
-                              HttpServletRequest request,
-                              HttpServletResponse response) throws IOException {
+    public ModelAndView getDirectory(@PathVariable String repository,
+                                     HttpServletRequest request,
+                                     HttpServletResponse response) throws IOException {
         if (!request.getPathInfo().endsWith("/")) {
             response.sendRedirect(request.getRequestURL().toString() + "/");
             return null;
         }
 
         String path = getPath(request);
-        if (path.length() > 0) {
+        if (!path.isEmpty()) {
             path += "/";
         }
 
         Iterable<DBObject> listing = getDirectoryListing(repository, path);
-        if (Iterables.isEmpty(listing)) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        if (!path.isEmpty() && isEmpty(listing)) {
+            response.sendError(SC_NOT_FOUND);
             return null;
         }
 
         Map<String, Object> model = new HashMap<>();
+        model.put("repository", "releases".equals(repository) ? "Release" : "Snapshot");
         model.put("path", path);
         model.put("directories", filter(listing, DIRECTORY_PREDICATE));
         model.put("files", filter(listing, FILE_PREDICATE));
-        return new ModelAndView("index", model);
+        return new ModelAndView("directory", model);
     }
 
     private Iterable<DBObject> getDirectoryListing(String repository, String path) {
