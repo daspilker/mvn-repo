@@ -1,13 +1,18 @@
 mvn-repo
 ========
 
-A Maven repository.
+A [Maven][2] repository server.
 
 Compiling
 ---------
 
-To compile and run this project you need [Java SE 7][1], [Maven 3.0][2] and [MongoDB][3]. When these
+To compile and run this project you need [Java SE 7][1], [Maven 3.0.4][2] and [MongoDB 2.2][3]. When these
 prerequisites are installed, simply type `mvn tomcat7:run` and open a browser at [http://localhost:8080/][4].
+
+Build Status
+------------
+
+[![Build Status](https://secure.travis-ci.org/daspilker/mvn-repo.png)](https://travis-ci.org/daspilker/mvn-repo)
 
 License
 -------
