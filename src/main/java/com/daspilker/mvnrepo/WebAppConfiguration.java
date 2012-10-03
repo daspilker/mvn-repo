@@ -67,7 +67,9 @@ public class WebAppConfiguration extends WebMvcConfigurerAdapter {
 
     @PreDestroy
     public void destroy() throws IOException {
-        mongo.close();
+        if (mongo != null) {
+            mongo.close();
+        }
     }
 
     static String loadFunction(String name) throws IOException {
