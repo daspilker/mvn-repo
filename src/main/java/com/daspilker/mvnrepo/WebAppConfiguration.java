@@ -39,7 +39,7 @@ public class WebAppConfiguration extends WebMvcConfigurerAdapter {
 
     private Mongo mongo;
 
-    @Value("${MONGOLAB_URI:mongodb://localhost:27017/mvnrepo}")
+    @Value("${MONGOLAB_URI:mongodb://localhost/mvnrepo}")
     private String mongoUri;
 
     @Bean
