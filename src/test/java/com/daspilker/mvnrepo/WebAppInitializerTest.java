@@ -50,4 +50,20 @@ public class WebAppInitializerTest {
         verify(servletRegistrationDynamic).addMapping("/*");
         verify(filterRegistrationDynamic).addMappingForServletNames(EnumSet.of(REQUEST), false, "dispatcher");
     }
+
+    @Test
+    public void testOnStartupWithProfile() throws ServletException {
+
+        when(servletContext.addServlet(eq("dispatcher"), any(DispatcherServlet.class))).thenReturn(servletRegistrationDynamic);
+        when(servletContext.addFilter(eq(SPRING_SECURITY_FILTER_CHAIN), any(DelegatingFilterProxy.class))).thenReturn(filterRegistrationDynamic);
+
+        webAppInitializer.onStartup(servletContext);
+
+        verify(servletContext).addListener(any(ContextLoaderListener.class));
+        verify(servletContext).addServlet(eq("dispatcher"), any(DispatcherServlet.class));
+        verify(servletContext).addFilter(eq(SPRING_SECURITY_FILTER_CHAIN), any(DelegatingFilterProxy.class));
+        verify(servletRegistrationDynamic).setLoadOnStartup(1);
+        verify(servletRegistrationDynamic).addMapping("/*");
+        verify(filterRegistrationDynamic).addMappingForServletNames(EnumSet.of(REQUEST), false, "dispatcher");
+    }
 }

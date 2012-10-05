@@ -1,6 +1,5 @@
 package com.daspilker.mvnrepo;
 
-import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.MongoURI;
 import com.mongodb.gridfs.GridFS;
@@ -12,6 +11,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
@@ -39,7 +40,7 @@ public class UploadAndBrowsingIT {
     private static final String BASE_URL = "http://localhost:8080/";
 
     @Inject
-    private DB db;
+    private MongoDbFactory mongoDbFactory;
 
     @Inject
     private WebDriver webDriver;
@@ -52,7 +53,7 @@ public class UploadAndBrowsingIT {
     }
 
     private void createUser() {
-        db.getCollection("users").remove(start("username", "daspilker").get());
+        mongoDbFactory.getDb().getCollection("users").remove(start("username", "daspilker").get());
 
         String salt = "salt";
         String password = new ShaPasswordEncoder(256).encodePassword("secret", salt);
@@ -62,7 +63,7 @@ public class UploadAndBrowsingIT {
                 add("authorities", asList("ROLE_USER")).
                 add("salt", salt).
                 get();
-        db.getCollection("users").insert(user);
+        mongoDbFactory.getDb().getCollection("users").insert(user);
     }
 
     private void uploadFile() {
@@ -73,7 +74,7 @@ public class UploadAndBrowsingIT {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.put(BASE_URL + "repository/releases/com/daspilker/test.txt", httpEntity);
 
-        GridFS gridFS = new GridFS(db, "releases");
+        GridFS gridFS = new GridFS(mongoDbFactory.getDb(), "releases");
         List<GridFSDBFile> files = gridFS.find("com/daspilker/test.txt");
 
         assertEquals(1, files.size());
@@ -119,8 +120,8 @@ public class UploadAndBrowsingIT {
     @Configuration
     public static class TestConfiguration {
         @Bean
-        public DB db() throws UnknownHostException {
-            return new MongoURI("mongodb://localhost/mvnrepo-test").connectDB();
+        public MongoDbFactory mongoDbFactory() throws UnknownHostException {
+            return new SimpleMongoDbFactory(new MongoURI("mongodb://localhost/mvnrepo-test"));
         }
 
         @Bean

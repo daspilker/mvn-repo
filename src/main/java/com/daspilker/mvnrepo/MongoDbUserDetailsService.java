@@ -16,10 +16,10 @@
 
 package com.daspilker.mvnrepo;
 
-import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import org.bson.types.BasicBSONList;
+import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -43,7 +43,7 @@ public class MongoDbUserDetailsService implements UserDetailsService {
     private static final String FIELD_SALT = "salt";
 
     @Inject
-    private DB db;
+    private MongoDbFactory mongoDbFactory;
 
     @PostConstruct
     public void initialize() {
@@ -63,7 +63,7 @@ public class MongoDbUserDetailsService implements UserDetailsService {
     }
 
     private DBCollection getCollection() {
-        return db.getCollection("users");
+        return mongoDbFactory.getDb().getCollection("users");
     }
 
     private static Collection<GrantedAuthority> convertAuthorities(BasicBSONList authorities) {

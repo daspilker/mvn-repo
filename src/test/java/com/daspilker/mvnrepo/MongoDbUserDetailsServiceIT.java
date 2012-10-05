@@ -1,7 +1,6 @@
 package com.daspilker.mvnrepo;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.MongoURI;
 import org.junit.Before;
@@ -9,6 +8,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,11 +33,11 @@ public class MongoDbUserDetailsServiceIT {
     private UserDetailsService userDetailsService;
 
     @Inject
-    private DB db;
+    private MongoDbFactory mongoDbFactory;
 
     @Before
     public void setUp() {
-        db.getCollection("users").remove(new BasicDBObject("username", "daspilker"));
+        mongoDbFactory.getDb().getCollection("users").remove(new BasicDBObject("username", "daspilker"));
     }
 
     @Test(expected = UsernameNotFoundException.class)
@@ -52,7 +53,7 @@ public class MongoDbUserDetailsServiceIT {
                 add("authorities", singletonList("ROLE_TEST")).
                 add("salt", "salted").
                 get();
-        db.getCollection("users").insert(user);
+        mongoDbFactory.getDb().getCollection("users").insert(user);
 
         UserDetails result = userDetailsService.loadUserByUsername("daspilker");
 
@@ -68,8 +69,8 @@ public class MongoDbUserDetailsServiceIT {
     @Configuration
     public static class TestConfiguration {
         @Bean
-        public DB db() throws UnknownHostException {
-            return new MongoURI("mongodb://localhost/mvnrepo-test").connectDB();
+        public MongoDbFactory mongoDbFactory() throws UnknownHostException {
+            return new SimpleMongoDbFactory(new MongoURI("mongodb://localhost/mvnrepo-test"));
         }
 
         @Bean

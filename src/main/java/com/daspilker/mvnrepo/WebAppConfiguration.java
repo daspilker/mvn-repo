@@ -18,15 +18,14 @@ package com.daspilker.mvnrepo;
 
 import com.google.common.io.Resources;
 import com.mongodb.DB;
-import com.mongodb.Mongo;
-import com.mongodb.MongoURI;
 import com.mongodb.gridfs.GridFS;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import javax.annotation.PreDestroy;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import java.io.IOException;
 
 import static com.google.common.base.Charsets.UTF_8;
@@ -37,39 +36,23 @@ import static com.mongodb.BasicDBObjectBuilder.start;
 public class WebAppConfiguration extends WebMvcConfigurerAdapter {
     private static final String FUNCTIONS_PACKAGE = "com/daspilker/mvnrepo/functions/";
 
-    private Mongo mongo;
+    @Inject
+    private MongoDbFactory mongoDbFactory;
 
-    @Value("${MONGOLAB_URI:mongodb://localhost/mvnrepo}")
-    private String mongoUri;
-
-    @Bean
-    public DB db() throws IOException {
-        MongoURI mongoURI = new MongoURI(mongoUri);
-        DB db = mongoURI.connectDB();
-        if (mongoURI.getUsername() != null && mongoURI.getPassword() != null) {
-            db.authenticate(mongoURI.getUsername(), mongoURI.getPassword());
-        }
-        mongo = db.getMongo();
-        loadFunction(db, "sha256");
-        loadFunction(db, "createUser");
-        return db;
+    @PostConstruct
+    public void initialize() throws IOException {
+        loadFunction(mongoDbFactory.getDb(), "sha256");
+        loadFunction(mongoDbFactory.getDb(), "createUser");
     }
 
     @Bean
-    public GridFS releaseGridFS() throws IOException {
-        return new GridFS(db(), "releases");
+    public GridFS releaseGridFS() {
+        return new GridFS(mongoDbFactory.getDb(), "releases");
     }
 
     @Bean
-    public GridFS snapshotGridFS() throws IOException {
-        return new GridFS(db(), "snapshots");
-    }
-
-    @PreDestroy
-    public void destroy() throws IOException {
-        if (mongo != null) {
-            mongo.close();
-        }
+    public GridFS snapshotGridFS() {
+        return new GridFS(mongoDbFactory.getDb(), "snapshots");
     }
 
     static String loadFunction(String name) throws IOException {

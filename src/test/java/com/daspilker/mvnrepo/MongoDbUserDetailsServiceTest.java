@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,6 +28,9 @@ public class MongoDbUserDetailsServiceTest {
     private MongoDbUserDetailsService mongoDbUserDetailsService;
 
     @Mock
+    private MongoDbFactory mongoDbFactory;
+
+    @Mock
     private DB db;
 
     @Mock
@@ -37,6 +41,7 @@ public class MongoDbUserDetailsServiceTest {
 
     @Before
     public void setUp() {
+        when(mongoDbFactory.getDb()).thenReturn(db);
         when(db.getCollection("users")).thenReturn(dbCollection);
     }
 

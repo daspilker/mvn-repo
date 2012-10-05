@@ -17,6 +17,7 @@
 package com.daspilker.mvnrepo;
 
 import org.springframework.web.WebApplicationInitializer;
+import org.springframework.web.context.ConfigurableWebEnvironment;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
@@ -36,10 +37,10 @@ public class WebAppInitializer implements WebApplicationInitializer {
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
-        String profile = System.getenv("ENVIRONMENT");
-
         XmlWebApplicationContext applicationContext = new XmlWebApplicationContext();
-        applicationContext.getEnvironment().setActiveProfiles(profile != null ? profile : "development");
+
+        ConfigurableWebEnvironment environment = applicationContext.getEnvironment();
+        environment.setActiveProfiles(environment.getProperty("ENVIRONMENT", "development"));
 
         servletContext.addListener(new ContextLoaderListener(applicationContext));
 
