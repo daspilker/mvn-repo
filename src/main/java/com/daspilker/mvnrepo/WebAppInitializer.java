@@ -48,8 +48,8 @@ public class WebAppInitializer implements WebApplicationInitializer {
         dispatcher.setLoadOnStartup(1);
         dispatcher.addMapping("/*");
 
-        DelegatingFilterProxy springSecurityFilterChain = new DelegatingFilterProxy(SPRING_SECURITY_FILTER_CHAIN, applicationContext);
-        FilterRegistration.Dynamic springSecurityFilter = servletContext.addFilter(SPRING_SECURITY_FILTER_CHAIN, springSecurityFilterChain);
-        springSecurityFilter.addMappingForServletNames(EnumSet.of(REQUEST), false, SERVLET_NAME_DISPATCHER);
+        DelegatingFilterProxy filterProxy = new DelegatingFilterProxy(SPRING_SECURITY_FILTER_CHAIN, applicationContext);
+        FilterRegistration.Dynamic securityFilter = servletContext.addFilter(SPRING_SECURITY_FILTER_CHAIN, filterProxy);
+        securityFilter.addMappingForServletNames(EnumSet.of(REQUEST), false, SERVLET_NAME_DISPATCHER);
     }
 }
