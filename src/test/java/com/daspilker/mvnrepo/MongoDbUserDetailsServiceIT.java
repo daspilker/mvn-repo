@@ -30,7 +30,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 
-import static com.lordofthejars.nosqlunit.core.LoadStrategyEnum.CLEAN_INSERT;
+import static com.lordofthejars.nosqlunit.core.LoadStrategyEnum.DELETE_ALL;
 import static com.lordofthejars.nosqlunit.mongodb.MongoDbConfigurationBuilder.mongoDb;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -46,13 +46,13 @@ public class MongoDbUserDetailsServiceIT {
     private UserDetailsService userDetailsService;
 
     @Test(expected = UsernameNotFoundException.class)
-    @UsingDataSet(loadStrategy = CLEAN_INSERT)
+    @UsingDataSet(loadStrategy = DELETE_ALL)
     public void testNotFound() {
         userDetailsService.loadUserByUsername("daspilker");
     }
 
     @Test
-    @UsingDataSet(loadStrategy = CLEAN_INSERT)
+    @UsingDataSet
     public void test() {
         UserDetails result = userDetailsService.loadUserByUsername("daspilker");
 
