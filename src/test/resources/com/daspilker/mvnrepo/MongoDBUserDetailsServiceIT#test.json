@@ -1,0 +1,11 @@
+{
+    "users":
+    [
+        {
+            "username":"daspilker",
+            "password":"secret",
+            "authorities":["ROLE_TEST"],
+            "salt":"salted"
+        }
+    ]
+}
