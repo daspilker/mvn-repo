@@ -81,11 +81,13 @@
             <groupId>com.lordofthejars</groupId>
             <artifactId>nosqlunit-core</artifactId>
             <version>${version.com.lordofthejars}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.lordofthejars</groupId>
             <artifactId>nosqlunit-mongodb</artifactId>
             <version>${version.com.lordofthejars}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>javax.inject</groupId>
