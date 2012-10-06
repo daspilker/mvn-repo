@@ -46,7 +46,7 @@ import static org.openqa.selenium.By.tagName;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 public class UploadAndBrowsingIT {
-    private static final String BASE_URL = "http://localhost:8080/";
+    private static final String BASE_URL = "http://localhost:" + System.getProperty("port", "8080") + "/";
 
     @Inject
     private MongoDbFactory mongoDbFactory;

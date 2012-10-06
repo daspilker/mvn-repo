@@ -28,7 +28,7 @@ import static org.openqa.selenium.By.linkText;
 import static org.openqa.selenium.By.tagName;
 
 public class IndexPageIT {
-    private static final String BASE_URL = "http://localhost:8080/";
+    private static final String BASE_URL = "http://localhost:" + System.getProperty("port", "8080") + "/";
 
     private WebDriver driver;
 
