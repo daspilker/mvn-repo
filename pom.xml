@@ -33,7 +33,6 @@
     </ciManagement>
     <properties>
         <skipTests>false</skipTests>
-        <version.com.lordofthejars>0.4.1</version.com.lordofthejars>
         <version.org.seleniumhq.selenium>2.25.0</version.org.seleniumhq.selenium>
         <version.org.slf4j>1.7.1</version.org.slf4j>
         <version.org.springframework>3.1.2.RELEASE</version.org.springframework>
@@ -62,6 +61,12 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
+            <groupId>com.daspilker.springframework</groupId>
+            <artifactId>spring-security-mongodb</artifactId>
+            <version>1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
             <groupId>com.github.sps.mustache</groupId>
             <artifactId>mustache-spring-view</artifactId>
             <version>1.0</version>
@@ -76,18 +81,6 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>13.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.lordofthejars</groupId>
-            <artifactId>nosqlunit-core</artifactId>
-            <version>${version.com.lordofthejars}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.lordofthejars</groupId>
-            <artifactId>nosqlunit-mongodb</artifactId>
-            <version>${version.com.lordofthejars}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>javax.inject</groupId>
@@ -161,6 +154,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${version.org.springframework}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -190,22 +184,6 @@
                 <exclusion>
                     <groupId>org.springframework.security</groupId>
                     <artifactId>spring-security-crypto</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-            <version>${version.org.springframework.security}</version>
-            <scope>runtime</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-jdbc</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-tx</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

@@ -17,22 +17,16 @@
 package com.daspilker.mvnrepo;
 
 import com.mongodb.DBObject;
-import com.mongodb.MongoURI;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDbFactory;
-import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.security.crypto.codec.Utf8;
 import org.springframework.test.context.ContextConfiguration;
@@ -40,7 +34,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 
 import javax.inject.Inject;
-import java.net.UnknownHostException;
 import java.util.List;
 
 import static com.mongodb.BasicDBObjectBuilder.start;
@@ -51,7 +44,7 @@ import static org.openqa.selenium.By.linkText;
 import static org.openqa.selenium.By.tagName;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = UploadAndBrowsingIT.TestConfiguration.class)
+@ContextConfiguration
 public class UploadAndBrowsingIT {
     private static final String BASE_URL = "http://localhost:8080/";
 
@@ -130,24 +123,6 @@ public class UploadAndBrowsingIT {
                 }
             }
             assertTrue(found);
-        }
-    }
-
-    @Configuration
-    public static class TestConfiguration {
-        @Bean
-        public MongoDbFactory mongoDbFactory() throws UnknownHostException {
-            return new SimpleMongoDbFactory(new MongoURI("mongodb://localhost/mvnrepo-test"));
-        }
-
-        @Bean
-        public UserDetailsService userDetailsService() {
-            return new MongoDbUserDetailsService();
-        }
-
-        @Bean(destroyMethod = "quit")
-        public WebDriver webDriver() {
-            return new FirefoxDriver();
         }
     }
 }

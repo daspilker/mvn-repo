@@ -45,6 +45,8 @@
         </security:authentication-provider>
     </security:authentication-manager>
     <mongo:db-factory uri="${MONGOLAB_URI:mongodb://localhost/mvnrepo}"/>
+    <bean id="mongoDbUserDetailsService"
+          class="com.daspilker.springframework.security.mongodb.MongoDbUserDetailsService"/>
     <bean id="abstractViewResolver" abstract="true"
           class="org.springframework.web.servlet.view.mustache.MustacheViewResolver">
         <property name="prefix" value="/WEB-INF/views/"/>
