@@ -19,13 +19,13 @@ package com.daspilker.mvnrepo;
 import com.google.common.io.Resources;
 import com.mongodb.DB;
 import com.mongodb.gridfs.GridFS;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import java.io.IOException;
 
 import static com.google.common.base.Charsets.UTF_8;
@@ -36,7 +36,7 @@ import static com.mongodb.BasicDBObjectBuilder.start;
 public class WebAppConfiguration extends WebMvcConfigurerAdapter {
     private static final String FUNCTIONS_PACKAGE = "com/daspilker/mvnrepo/functions/";
 
-    @Inject
+    @Autowired
     private MongoDbFactory mongoDbFactory;
 
     @PostConstruct

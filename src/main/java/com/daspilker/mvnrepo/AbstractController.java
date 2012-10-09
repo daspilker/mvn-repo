@@ -17,11 +17,11 @@
 package com.daspilker.mvnrepo;
 
 import com.mongodb.gridfs.GridFS;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
 
-import javax.inject.Inject;
-import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 import static org.springframework.web.servlet.HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE;
@@ -29,12 +29,12 @@ import static org.springframework.web.servlet.HandlerMapping.BEST_MATCHING_PATTE
 public abstract class AbstractController {
     private static final PathMatcher PATH_MATCHER = new AntPathMatcher();
 
-    @Inject
-    @Named("releaseGridFS")
+    @Autowired
+    @Qualifier("releaseGridFS")
     private GridFS releaseGridFS;
 
-    @Inject
-    @Named("snapshotGridFS")
+    @Autowired
+    @Qualifier("snapshotGridFS")
     private GridFS snapshotGridFS;
 
     protected GridFS getGridFS(String repository) {

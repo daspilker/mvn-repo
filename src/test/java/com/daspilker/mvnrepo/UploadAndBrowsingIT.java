@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -33,7 +34,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 
-import javax.inject.Inject;
 import java.util.List;
 
 import static com.mongodb.BasicDBObjectBuilder.start;
@@ -48,10 +48,10 @@ import static org.openqa.selenium.By.tagName;
 public class UploadAndBrowsingIT {
     private static final String BASE_URL = "http://localhost:" + System.getProperty("port", "8080") + "/";
 
-    @Inject
+    @Autowired
     private MongoDbFactory mongoDbFactory;
 
-    @Inject
+    @Autowired
     private WebDriver webDriver;
 
     @Test
