@@ -67,7 +67,7 @@
         <dependency>
             <groupId>com.daspilker.springframework</groupId>
             <artifactId>spring-security-mongodb</artifactId>
-            <version>3</version>
+            <version>4</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
